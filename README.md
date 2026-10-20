@@ -9,6 +9,7 @@
 - [攻略方針と技術動向](docs/strategy.md)
 - [開発ロードマップ](docs/roadmap.md)
 - [駆動系の検討（1 輪 3 モータ）](docs/design/drive.md)
+- [吸引の検討](docs/design/suction.md)
 
 ## ディレクトリ構成（予定）
 

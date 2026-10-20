@@ -8,6 +8,7 @@
 - [競技規定まとめ](docs/rules.md)
 - [攻略方針と技術動向](docs/strategy.md)
 - [開発ロードマップ](docs/roadmap.md)
+- [上位ロボトレース機体の調査](docs/survey.md)
 - [駆動系の検討（1 輪 3 モータ）](docs/design/drive.md)
 - [吸引の検討](docs/design/suction.md)
 - [電源](docs/design/power.md)

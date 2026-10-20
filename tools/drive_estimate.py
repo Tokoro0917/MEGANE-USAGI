@@ -1,44 +1,60 @@
 """駆動系の加速度を見積もる。
 
-DC モータの直線的なトルク-回転数特性を仮定して、車速ごとに出せる最大加速度を計算する。
-モータの値は通販の掲載値から推定したもの。実測したら書き換える。
+DC モータのモデル I = (V - Ke*ω) / R（Ke = Kt）を使い、電流の上限（ソフトで制限する値）と
+電源電圧の両方を考えて、車速ごとに 1 輪あたり n 個のモータで出せる最大加速度を計算する。
+タイヤのグリップと転がり抵抗は入れていない。
 
     python3 tools/drive_estimate.py
+    python3 tools/drive_estimate.py --gear 3.15 5 --tire 20 --mass 100 --ilim 3 --volt 7.4
 """
-import math
+import argparse
 
-V = 3.7          # モータ印加電圧 [V]
-ETA = 0.8        # ギア効率
-R = 0.012        # タイヤ半径 [m]
-G = 10           # 減速比
-BASE_MASS = 0.140  # 駆動モータを除いた機体質量 [kg]
-SPEEDS = (0, 1, 2, 3, 4)  # 評価する車速 [m/s]
+# NFP-D8620-3665-3-7.4（KOGUMA-Mk4 の docs/spec.md のデータシート値）
+MOTOR = dict(
+    R=1.0,          # 巻線抵抗 [Ω]
+    KT=1.47e-3,     # トルク定数 [Nm/A]（逆起電力定数も同じ値とみなす）
+    I0=0.14,        # 無負荷電流 [A]
+    MASS=5.3e-3,    # 質量 [kg]
+)
+ETA = 0.8           # ギア効率
+SPEEDS = (0, 2, 4, 6)  # 評価する車速 [m/s]
 
-# 名前: (無負荷回転数 [rpm], 拘束電流 [A], 質量 [g])
-MOTORS = {
-    "7x16mm (716)": (47000, 2.0, 3.0),
-    "10x20mm (10D)": (39500, 4.9, 5.5),
-}
+
+def accel(v, n, gear, tire_d, mass, ilim, volt):
+    """車速 v で、1 輪あたり n 個のモータで出せる加速度 [m/s²] と 1 個あたりの電流 [A]。"""
+    r = tire_d / 2
+    w = v / r * gear                      # モータの角速度 [rad/s]
+    i_volt = (volt - MOTOR['KT'] * w) / MOTOR['R']
+    i = max(0.0, min(ilim, i_volt))
+    torque = MOTOR['KT'] * max(0.0, i - MOTOR['I0'])
+    force = 2 * n * torque * gear * ETA / r
+    return force / mass, i
 
 
 def main():
-    for name, (rpm, i_stall, mass_g) in MOTORS.items():
-        w0 = rpm * 2 * math.pi / 60
-        kt = V / w0
-        t_stall = kt * i_stall
-        v_max = w0 / G * R
-        print(f"\n{name}: Kt={kt * 1e3:.2f} mNm/A, 拘束トルク={t_stall * 1e3:.2f} mNm, "
-              f"無負荷最高速={v_max:.1f} m/s")
-        for n in (1, 3):
-            m = BASE_MASS + 2 * n * mass_g / 1000
-            accels = []
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--gear', type=float, nargs='+', default=[3.15, 5.0], help='減速比')
+    ap.add_argument('--tire', type=float, default=20.0, help='タイヤ直径 [mm]')
+    ap.add_argument('--mass', type=float, default=100.0, help='駆動モータを除いた機体質量 [g]')
+    ap.add_argument('--ilim', type=float, default=3.0, help='モータ 1 個あたりの電流の上限 [A]')
+    ap.add_argument('--volt', type=float, default=7.4, help='モータにかけられる電圧 [V]')
+    a = ap.parse_args()
+
+    tire_d = a.tire / 1000
+    print(f"タイヤ {a.tire:.0f}mm, 電圧 {a.volt}V, 電流上限 {a.ilim}A/個, "
+          f"モータ以外 {a.mass:.0f}g, 効率 {ETA}")
+    for gear in a.gear:
+        v_free = a.volt / MOTOR['KT'] / gear * tire_d / 2
+        print(f"\n減速比 {gear}: 無負荷最高速 約 {v_free:.1f} m/s")
+        for n in (1, 2, 3):
+            mass = a.mass / 1000 + 2 * n * MOTOR['MASS']
+            cols = []
             for v in SPEEDS:
-                t = t_stall * max(0.0, 1 - v / v_max)
-                f = 2 * n * t * G * ETA / R
-                accels.append(f / m)
-            cols = "  ".join(f"{v}m/s:{a:5.1f}" for v, a in zip(SPEEDS, accels))
-            print(f"  {n}個/輪 {m * 1e3:.0f}g  {cols}  [m/s²]  拘束電流合計 {2 * n * i_stall:.0f}A")
+                acc, _ = accel(v, n, gear, tire_d, mass, a.ilim, a.volt)
+                cols.append(f"{v}m/s:{acc:5.1f}")
+            print(f"  {n}個/輪 {mass * 1e3:4.0f}g  " + "  ".join(cols)
+                  + f"  [m/s²]  電流ピーク合計 {2 * n * a.ilim:.0f}A")
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

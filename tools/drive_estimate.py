@@ -5,7 +5,7 @@ DC モータのモデル I = (V - Ke*ω) / R（Ke = Kt）を使い、電流の�
 タイヤのグリップと転がり抵抗は入れていない。
 
     python3 tools/drive_estimate.py
-    python3 tools/drive_estimate.py --gear 3.15 5 --tire 20 --mass 68 --ilim 3 --volt 7.4
+    python3 tools/drive_estimate.py --gear 4.38 5.46 --tire 24 --mass 68 --ilim 2.4 --volt 7.4
 """
 import argparse
 
@@ -33,10 +33,10 @@ def accel(v, n, gear, tire_d, mass, ilim, volt):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--gear', type=float, nargs='+', default=[3.15, 5.0], help='減速比')
-    ap.add_argument('--tire', type=float, default=20.0, help='タイヤ直径 [mm]')
+    ap.add_argument('--gear', type=float, nargs='+', default=[71 / 13], help='減速比')
+    ap.add_argument('--tire', type=float, default=24.0, help='タイヤ直径 [mm]')
     ap.add_argument('--mass', type=float, default=68.0, help='駆動モータを除いた機体質量 [g]')
-    ap.add_argument('--ilim', type=float, default=3.0, help='モータ 1 個あたりの電流の上限 [A]')
+    ap.add_argument('--ilim', type=float, default=2.4, help='モータ 1 個あたりの電流の上限 [A]')
     ap.add_argument('--volt', type=float, default=7.4, help='モータにかけられる電圧 [V]')
     a = ap.parse_args()
 
@@ -45,7 +45,7 @@ def main():
           f"モータ以外 {a.mass:.0f}g, 効率 {ETA}")
     for gear in a.gear:
         v_free = a.volt / MOTOR['KT'] / gear * tire_d / 2
-        print(f"\n減速比 {gear}: 無負荷最高速 約 {v_free:.1f} m/s")
+        print(f"\n減速比 {gear:.2f}: 無負荷最高速 約 {v_free:.1f} m/s")
         for n in (1, 2, 3):
             mass = a.mass / 1000 + 2 * n * MOTOR['MASS']
             cols = []

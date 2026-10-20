@@ -11,6 +11,7 @@
 - [駆動系の検討（1 輪 3 モータ）](docs/design/drive.md)
 - [吸引の検討](docs/design/suction.md)
 - [電源](docs/design/power.md)
+- [重量配分](docs/design/mass.md)
 
 ## ディレクトリ構成（予定）
 

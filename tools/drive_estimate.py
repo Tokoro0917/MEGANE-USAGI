@@ -5,7 +5,7 @@ DC モータのモデル I = (V - Ke*ω) / R（Ke = Kt）を使い、電流の�
 タイヤのグリップと転がり抵抗は入れていない。
 
     python3 tools/drive_estimate.py
-    python3 tools/drive_estimate.py --gear 3.15 5 --tire 20 --mass 100 --ilim 3 --volt 7.4
+    python3 tools/drive_estimate.py --gear 3.15 5 --tire 20 --mass 68 --ilim 3 --volt 7.4
 """
 import argparse
 
@@ -35,7 +35,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--gear', type=float, nargs='+', default=[3.15, 5.0], help='減速比')
     ap.add_argument('--tire', type=float, default=20.0, help='タイヤ直径 [mm]')
-    ap.add_argument('--mass', type=float, default=100.0, help='駆動モータを除いた機体質量 [g]')
+    ap.add_argument('--mass', type=float, default=68.0, help='駆動モータを除いた機体質量 [g]')
     ap.add_argument('--ilim', type=float, default=3.0, help='モータ 1 個あたりの電流の上限 [A]')
     ap.add_argument('--volt', type=float, default=7.4, help='モータにかけられる電圧 [V]')
     a = ap.parse_args()

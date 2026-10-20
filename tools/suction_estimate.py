@@ -5,7 +5,7 @@
    （すき間から漏れる空気の量 × 負圧 を空気の仕事とする。KOGUMA-Mk4 の docs/spec.md と同じ考え方）
 
     python3 tools/suction_estimate.py
-    python3 tools/suction_estimate.py --mass 140 --mu 1.0
+    python3 tools/suction_estimate.py --mass 100 --mu 1.0 --suction 600
 """
 import argparse
 import math
@@ -14,17 +14,17 @@ G = 9.81
 RHO = 1.2           # 空気の密度 [kg/m³]
 CD = 0.6            # すき間の流量係数
 FAN_EFF = 0.3       # ファン全体の効率（電気 → 空気）
-SUCTIONS = (0, 100, 200, 300, 400)          # 吸引力 [gf]
+SUCTIONS = (0, 200, 400, 600)               # 吸引力 [gf]
 RADII = (0.1, 0.2, 0.5)                     # コーナー半径 [m]
-AREAS = ((40, 50), (60, 80))                # 吸引する範囲 [mm × mm]
+AREAS = ((40, 50), (50, 60), (60, 80))      # 吸引する範囲 [mm × mm]
 GAPS = (0.2, 0.5, 1.0)                      # スカートと床のすき間 [mm]
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--mass', type=float, default=140.0, help='機体質量 [g]')
+    ap.add_argument('--mass', type=float, default=100.0, help='機体質量 [g]')
     ap.add_argument('--mu', type=float, default=1.0, help='タイヤと床の摩擦係数')
-    ap.add_argument('--suction', type=float, default=300.0, help='電力の計算に使う吸引力 [gf]')
+    ap.add_argument('--suction', type=float, default=600.0, help='電力の計算に使う吸引力 [gf]')
     a = ap.parse_args()
     m = a.mass / 1000
 

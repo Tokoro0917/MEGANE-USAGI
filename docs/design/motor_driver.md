@@ -1,6 +1,6 @@
 # モータドライバ
 
-## 決定: 1 輪に 1 個（計 2 個）（2026-10-20）
+## 決定: 1 輪に 1 個（計 2 個）、**TI DRV8262DDW をシングル H ブリッジモードで使う**（2026-10-20）
 
 同じ輪の 3 個のモータ（NFP-D8620）を **並列につないで、1 つの H ブリッジで駆動** する。
 
@@ -37,7 +37,7 @@ DRV8251A（4.1A）と DRV8256（6.4A）は電流が足りないので外した�
 2. **MP6615**: 発熱は DRV8262 の半分以下で、小さい。ハードの電流制限がない、電流出力のばらつきが大きい、手はんだがむずかしい、入手性が未確認。DRV8262 の発熱や面積が試作で問題になったときの乗り換え先
 3. **A4955 ＋ 外付け FET**: 損失が一番小さく、2S での実績（generic）もある。UVLO が約 5V で余裕が小さい、部品が多い、ブレーキ中は電流制限が効かない。初めての機体には手間とリスクが大きい
 
-→ **DRV8262DDW のままでよい。** 発熱は問題にならない（10.5A を 0.3 秒流しても温度上昇は十数℃。平均 4A なら損失は約 0.8W）
+→ **DRV8262DDW に決定（2026-10-20）。** 発熱は問題にならない（10.5A を 0.3 秒流しても温度上昇は十数℃。平均 4A なら損失は約 0.8W）
 
 出典: [DRV8262](https://www.ti.com/lit/gpn/drv8262)、[MP6615](https://www.monolithicpower.com/en/mp6615.html)、[A4955](https://www.allegromicro.com/-/media/files/datasheets/a4955-datasheet.pdf)、[SiZF5300DT](https://www.vishay.com/docs/62071/sizf5300dt.pdf)、[DRV8245-Q1](https://www.ti.com/lit/ds/symlink/drv8245-q1.pdf)、[DRV8145-Q1](https://www.ti.com/lit/ds/symlink/drv8145-q1.pdf)、[DRV8263-Q1](https://www.ti.com/lit/ds/symlink/drv8263-q1.pdf)、[DRV8873](https://www.ti.com/lit/ds/symlink/drv8873.pdf)、[DRV8874](https://www.ti.com/lit/ds/symlink/drv8874.pdf)、[MP6551](https://www.farnell.com/datasheets/3677095.pdf)、[TB67H420FTG](https://pololu.com/file/0J1510/TB67H420FTG_datasheet_en_20170818.pdf)
 

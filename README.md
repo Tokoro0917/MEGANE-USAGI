@@ -8,6 +8,7 @@
 - [競技規定まとめ](docs/rules.md)
 - [攻略方針と技術動向](docs/strategy.md)
 - [開発ロードマップ](docs/roadmap.md)
+- [駆動系の検討（1 輪 3 モータ）](docs/design/drive.md)
 
 ## ディレクトリ構成（予定）
 

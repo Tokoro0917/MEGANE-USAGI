@@ -14,6 +14,7 @@
 - [電源](docs/design/power.md)
 - [モータドライバ](docs/design/motor_driver.md)
 - [ラインセンサ](docs/design/line_sensor.md)
+- [マイコン](docs/design/mcu.md)
 - [重量配分](docs/design/mass.md)
 
 ## ディレクトリ構成（予定）

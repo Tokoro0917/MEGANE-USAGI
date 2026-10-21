@@ -15,6 +15,7 @@
 - [モータドライバ](docs/design/motor_driver.md)
 - [ラインセンサ](docs/design/line_sensor.md)
 - [マイコン](docs/design/mcu.md)
+- [IMU](docs/design/imu.md)
 - [エンコーダ](docs/design/encoder.md)
 - [走行ログ](docs/design/logging.md)
 - [重量配分](docs/design/mass.md)
